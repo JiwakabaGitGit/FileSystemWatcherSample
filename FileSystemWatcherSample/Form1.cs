@@ -61,6 +61,31 @@ namespace FileSystemWatcherSample
             watcher.Deleted += new System.IO.FileSystemEventHandler( Watcher_Changed );
             watcher.Renamed += new System.IO.RenamedEventHandler( Watcher_Renamed );
         }
+
+        //イベントハンドラ
+        private void Watcher_Changed( System.Object source,
+            System.IO.FileSystemEventArgs e )
+        {
+            switch ( e.ChangeType )
+            {
+                case System.IO.WatcherChangeTypes.Changed:
+                    richTextBox1.AppendText( "ファイル 「" + e.FullPath + "」が変更されました。\r\n" );
+                    break;
+                case System.IO.WatcherChangeTypes.Created:
+                    richTextBox1.AppendText( "ファイル 「" + e.FullPath + "」が作成されました。\r\n" );
+                    break;
+                case System.IO.WatcherChangeTypes.Deleted:
+                    richTextBox1.AppendText( "ファイル 「" + e.FullPath + "」が削除されました。\r\n" );
+                    break;
+            }
+        }
+
+        private void Watcher_Renamed( System.Object source,
+            System.IO.RenamedEventArgs e )
+        {
+            richTextBox1.AppendText( "ファイル 「" + e.FullPath + "」の名前が変更されました。\r\n" );
+        }
+
         private void button_path_Click( object sender, EventArgs e )
         {
             //テキストボックスをクリア
@@ -96,45 +121,16 @@ namespace FileSystemWatcherSample
 
             //監視を開始する
             watcher.EnableRaisingEvents = true;
-            Console.WriteLine( "監視を開始しました。" );
+            richTextBox1.AppendText( "監視を開始しました。\r\n" );
         }
-
         private void button_stop_Click( object sender, EventArgs e )
         {
             if ( watcher != null )
             {
                 //監視を終了
                 watcher.EnableRaisingEvents = false;
-                Console.WriteLine( "監視を終了しました。" );
+                richTextBox1.AppendText( "監視を終了しました。\r\n" );
             }
         }
-        //イベントハンドラ
-        private void Watcher_Changed( System.Object source,
-            System.IO.FileSystemEventArgs e )
-        {
-            switch ( e.ChangeType )
-            {
-                case System.IO.WatcherChangeTypes.Changed:
-                    Console.WriteLine(
-                        "ファイル 「" + e.FullPath + "」が変更されました。" );
-                    break;
-                case System.IO.WatcherChangeTypes.Created:
-                    Console.WriteLine(
-                        "ファイル 「" + e.FullPath + "」が作成されました。" );
-                    break;
-                case System.IO.WatcherChangeTypes.Deleted:
-                    Console.WriteLine(
-                        "ファイル 「" + e.FullPath + "」が削除されました。" );
-                    break;
-            }
-        }
-
-        private void Watcher_Renamed( System.Object source,
-            System.IO.RenamedEventArgs e )
-        {
-            Console.WriteLine(
-                "ファイル 「" + e.FullPath + "」の名前が変更されました。" );
-        }
-
     }
 }
